@@ -2,6 +2,12 @@
 
 基于 MCP (Model Context Protocol) 的智能多云服务器管理系统，支持 AWS、DigitalOcean、Vultr、阿里云四大主流云服务平台的统一管理。
 
+## 📚 文档导航
+
+- 🔥 **[MCP 服务完整规范](MCP_SERVICE_SPECIFICATION.md)** - 标准化 MCP 服务文档，包含所有工具详情
+- ⚡ **[MCP 快速参考](MCP_QUICK_REFERENCE.md)** - 常用工具和配置的速查表
+- 📖 **本文档** - 项目概述、安装部署和基础使用
+
 ## 🌟 核心特性
 
 ### 🎯 智能路由

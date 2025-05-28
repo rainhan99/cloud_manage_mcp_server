@@ -1,0 +1,559 @@
+{
+  "service": {
+    "name": "multi-cloud-manager",
+    "version": "2.0.0",
+    "description": "基于MCP的智能多云服务器管理系统",
+    "protocol": "MCP",
+    "supported_platforms": ["aws", "digitalocean", "vultr", "alibaba"]
+  },
+  "tools": {
+    "general": [
+      {
+        "name": "get_instance_info",
+        "description": "根据IP地址自动检测云服务提供商并获取实例信息",
+        "parameters": {
+          "ip_address": {
+            "type": "string",
+            "required": true,
+            "description": "公网IP地址"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_supported_providers", 
+        "description": "获取支持的云服务提供商列表",
+        "parameters": {},
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_system_status",
+        "description": "获取整个系统的状态概览", 
+        "parameters": {},
+        "security_level": "read-only"
+      },
+      {
+        "name": "check_provider_availability",
+        "description": "检查特定云服务提供商的可用性",
+        "parameters": {
+          "provider_name": {
+            "type": "string",
+            "required": true,
+            "description": "提供商名称",
+            "enum": ["aws", "digitalocean", "vultr", "alibaba"]
+          }
+        },
+        "security_level": "read-only"
+      }
+    ],
+    "aws": [
+      {
+        "name": "get_aws_instance_info",
+        "description": "获取AWS EC2实例信息（只读）",
+        "parameters": {
+          "ip_address_or_id": {
+            "type": "string", 
+            "required": true,
+            "description": "公网IP地址或实例ID"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_aws_instance_storage_info",
+        "description": "获取AWS EC2实例的存储详细信息",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true, 
+            "description": "EC2实例ID"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_aws_instance_monitoring",
+        "description": "获取AWS EC2实例的监控数据",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "EC2实例ID"
+          },
+          "hours": {
+            "type": "integer",
+            "required": false,
+            "default": 1,
+            "description": "获取过去多少小时的数据"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "list_aws_instances",
+        "description": "列出所有AWS EC2实例",
+        "parameters": {},
+        "security_level": "read-only"
+      }
+    ],
+    "digitalocean": [
+      {
+        "name": "get_digitalocean_droplet_info",
+        "description": "获取DigitalOcean Droplet信息",
+        "parameters": {
+          "ip_address_or_id": {
+            "type": "string",
+            "required": true,
+            "description": "公网IP地址或Droplet ID"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "power_on_digitalocean_droplet",
+        "description": "开启DigitalOcean Droplet（需要三次确认）",
+        "parameters": {
+          "droplet_id": {
+            "type": "integer",
+            "required": true,
+            "description": "Droplet ID"
+          },
+          "ip_confirmation": {
+            "type": "string", 
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认Droplet名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "power_off_digitalocean_droplet",
+        "description": "强制关闭DigitalOcean Droplet（需要三次确认）",
+        "parameters": {
+          "droplet_id": {
+            "type": "integer",
+            "required": true,
+            "description": "Droplet ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认Droplet名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "shutdown_digitalocean_droplet",
+        "description": "优雅关闭DigitalOcean Droplet（需要三次确认）",
+        "parameters": {
+          "droplet_id": {
+            "type": "integer",
+            "required": true,
+            "description": "Droplet ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认Droplet名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "reboot_digitalocean_droplet",
+        "description": "重启DigitalOcean Droplet（需要三次确认）",
+        "parameters": {
+          "droplet_id": {
+            "type": "integer",
+            "required": true,
+            "description": "Droplet ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认Droplet名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "list_digitalocean_droplets",
+        "description": "列出所有DigitalOcean Droplets",
+        "parameters": {},
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_digitalocean_droplet_monitoring",
+        "description": "获取DigitalOcean Droplet监控信息",
+        "parameters": {
+          "droplet_id": {
+            "type": "integer",
+            "required": true,
+            "description": "Droplet ID"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_digitalocean_droplet_actions",
+        "description": "获取DigitalOcean Droplet操作历史",
+        "parameters": {
+          "droplet_id": {
+            "type": "integer",
+            "required": true,
+            "description": "Droplet ID"
+          }
+        },
+        "security_level": "read-only"
+      }
+    ],
+    "vultr": [
+      {
+        "name": "get_vultr_instance_info",
+        "description": "获取Vultr实例信息",
+        "parameters": {
+          "ip_address_or_id": {
+            "type": "string",
+            "required": true,
+            "description": "公网IP地址或实例ID"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "power_on_vultr_instance",
+        "description": "开启Vultr实例（需要三次确认）",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "Vultr实例ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "power_off_vultr_instance",
+        "description": "强制关闭Vultr实例（需要三次确认）",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "Vultr实例ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "reboot_vultr_instance",
+        "description": "重启Vultr实例（需要三次确认）",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "Vultr实例ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "list_vultr_instances",
+        "description": "列出所有Vultr实例",
+        "parameters": {},
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_vultr_instance_bandwidth",
+        "description": "获取Vultr实例带宽使用情况",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "Vultr实例ID"
+          }
+        },
+        "security_level": "read-only"
+      }
+    ],
+    "alibaba": [
+      {
+        "name": "get_alibaba_instance_info",
+        "description": "获取阿里云ECS实例信息",
+        "parameters": {
+          "ip_address_or_id": {
+            "type": "string",
+            "required": true,
+            "description": "公网IP地址或实例ID"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "power_on_alibaba_instance",
+        "description": "启动阿里云ECS实例（需要三次确认）",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "ECS实例ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "power_off_alibaba_instance",
+        "description": "强制停止阿里云ECS实例（需要三次确认）",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "ECS实例ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "reboot_alibaba_instance",
+        "description": "重启阿里云ECS实例（需要三次确认）",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "ECS实例ID"
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
+      },
+      {
+        "name": "list_alibaba_instances",
+        "description": "列出所有阿里云ECS实例",
+        "parameters": {},
+        "security_level": "read-only"
+      },
+      {
+        "name": "get_alibaba_instance_monitoring",
+        "description": "获取阿里云ECS实例监控信息",
+        "parameters": {
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "ECS实例ID"
+          }
+        },
+        "security_level": "read-only"
+      }
+    ]
+  },
+  "security": {
+    "confirmation_requirements": {
+      "power_operations": {
+        "required_confirmations": 3,
+        "confirmation_types": [
+          "ip_address",
+          "instance_name", 
+          "operation_type"
+        ]
+      }
+    },
+    "platform_restrictions": {
+      "aws": {
+        "allowed_operations": ["read"],
+        "denied_operations": ["write", "delete", "power"]
+      },
+      "digitalocean": {
+        "allowed_operations": ["read", "power"],
+        "denied_operations": ["delete"]
+      },
+      "vultr": {
+        "allowed_operations": ["read", "power"],
+        "denied_operations": ["delete"]
+      },
+      "alibaba": {
+        "allowed_operations": ["read", "power"],
+        "denied_operations": ["delete"]
+      }
+    }
+  },
+  "environment_variables": {
+    "required": [
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "description": "AWS访问密钥ID",
+        "platform": "aws"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "description": "AWS秘密访问密钥",
+        "platform": "aws"
+      },
+      {
+        "name": "DIGITALOCEAN_TOKEN",
+        "description": "DigitalOcean API令牌",
+        "platform": "digitalocean"
+      },
+      {
+        "name": "VULTR_API_KEY",
+        "description": "Vultr API密钥",
+        "platform": "vultr"
+      },
+      {
+        "name": "ALIBABA_CLOUD_ACCESS_KEY_ID",
+        "description": "阿里云访问密钥ID",
+        "platform": "alibaba"
+      },
+      {
+        "name": "ALIBABA_CLOUD_ACCESS_KEY_SECRET",
+        "description": "阿里云访问密钥Secret",
+        "platform": "alibaba"
+      }
+    ],
+    "optional": [
+      {
+        "name": "IPINFO_API_TOKEN",
+        "description": "IPInfo服务API令牌，用于IP地址检测",
+        "platform": "all"
+      }
+    ]
+  }
+} 
