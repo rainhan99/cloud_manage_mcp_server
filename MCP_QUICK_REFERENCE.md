@@ -19,9 +19,43 @@ uv run python main.py
 ### 智能查询
 
 ```python
-get_instance_info(ip_address="1.2.3.4")  # 自动识别云平台
+# 自动检测云平台
+get_instance_info(ip_address="1.2.3.4")
+
+# 明确指定云平台（推荐）
+get_instance_info(ip_address="1.2.3.4", provider="aws")
+
+# 直接通过云平台查询
+get_instance_by_provider(provider="aws", identifier="i-1234567890abcdef0")
+get_instance_by_provider(provider="digitalocean", identifier="123456")
+
+# 系统状态查询
 get_system_status()                       # 查看系统状态
 get_supported_providers()                 # 查看支持的平台
+```
+
+### 通用电源管理
+
+```python
+# 通用电源管理（支持DigitalOcean、Vultr、阿里云）
+manage_instance_power(
+    provider="digitalocean",
+    instance_id="123456",
+    action="reboot",
+    ip_confirmation="1.2.3.4",
+    name_confirmation="server-name",
+    operation_confirmation="重启"
+)
+
+# 支持的操作：power_on, power_off, reboot, shutdown
+manage_instance_power(
+    provider="vultr",
+    instance_id="uuid-string",
+    action="power_on",
+    ip_confirmation="5.6.7.8",
+    name_confirmation="test-server",
+    operation_confirmation="开机"
+)
 ```
 
 ### AWS (只读)

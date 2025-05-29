@@ -16,9 +16,73 @@
             "type": "string",
             "required": true,
             "description": "公网IP地址"
+          },
+          "provider": {
+            "type": "string",
+            "required": false,
+            "description": "明确指定的云服务提供商",
+            "enum": ["aws", "digitalocean", "vultr", "alibaba"]
           }
         },
         "security_level": "read-only"
+      },
+      {
+        "name": "get_instance_by_provider",
+        "description": "通过明确指定的云服务提供商查询实例信息",
+        "parameters": {
+          "provider": {
+            "type": "string",
+            "required": true,
+            "description": "云服务提供商",
+            "enum": ["aws", "digitalocean", "vultr", "alibaba"]
+          },
+          "identifier": {
+            "type": "string",
+            "required": true,
+            "description": "实例标识符（IP地址或实例ID）"
+          }
+        },
+        "security_level": "read-only"
+      },
+      {
+        "name": "manage_instance_power",
+        "description": "通用的实例电源管理函数（支持所有云平台，AWS除外）",
+        "parameters": {
+          "provider": {
+            "type": "string",
+            "required": true,
+            "description": "云服务提供商",
+            "enum": ["digitalocean", "vultr", "alibaba"]
+          },
+          "instance_id": {
+            "type": "string",
+            "required": true,
+            "description": "实例ID"
+          },
+          "action": {
+            "type": "string",
+            "required": true,
+            "description": "操作类型",
+            "enum": ["power_on", "power_off", "reboot", "shutdown"]
+          },
+          "ip_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认IP地址"
+          },
+          "name_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认实例名称"
+          },
+          "operation_confirmation": {
+            "type": "string",
+            "required": true,
+            "description": "确认操作类型"
+          }
+        },
+        "security_level": "power-management",
+        "confirmation_required": true
       },
       {
         "name": "get_supported_providers", 

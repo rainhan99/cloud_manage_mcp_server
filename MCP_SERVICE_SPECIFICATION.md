@@ -26,8 +26,48 @@
 **参数**:
 
 - `ip_address` (string): 公网 IP 地址
+- `provider` (string, optional): 明确指定的云服务提供商 ('aws', 'digitalocean', 'vultr', 'alibaba')
 
 **返回**: 实例详细信息，包含提供商信息和实例配置
+
+**使用说明**:
+
+- 如果不指定 `provider` 参数，系统会自动检测云服务提供商
+- 如果指定 `provider` 参数，将跳过自动检测，直接使用指定的云服务提供商
+
+#### `get_instance_by_provider`
+
+**描述**: 通过明确指定的云服务提供商查询实例信息  
+**参数**:
+
+- `provider` (string): 云服务提供商 ('aws', 'digitalocean', 'vultr', 'alibaba')
+- `identifier` (string): 实例标识符（IP 地址或实例 ID）
+
+**返回**: 实例详细信息
+
+**使用说明**:
+
+- 智能识别标识符类型（IP 地址 vs 实例 ID）
+- 根据不同云平台的 ID 格式自动选择查询方式
+
+#### `manage_instance_power`
+
+**描述**: 通用的实例电源管理函数（支持所有云平台，AWS 除外）  
+**参数**:
+
+- `provider` (string): 云服务提供商 ('digitalocean', 'vultr', 'alibaba')
+- `instance_id` (string): 实例 ID
+- `action` (string): 操作类型 ('power_on', 'power_off', 'reboot', 'shutdown')
+- `ip_confirmation` (string): 确认 IP 地址
+- `name_confirmation` (string): 确认实例名称
+- `operation_confirmation` (string): 确认操作类型
+
+**返回**: 操作结果
+
+**安全限制**:
+
+- AWS 平台不支持电源管理操作
+- 所有操作都需要三次确认
 
 #### `get_supported_providers`
 

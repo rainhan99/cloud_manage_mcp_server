@@ -7,6 +7,7 @@
 - 🔥 **[MCP 服务完整规范](MCP_SERVICE_SPECIFICATION.md)** - 标准化 MCP 服务文档，包含所有工具详情
 - ⚡ **[MCP 快速参考](MCP_QUICK_REFERENCE.md)** - 常用工具和配置的速查表
 - 📖 **本文档** - 项目概述、安装部署和基础使用
+- 🎯 **[使用示例](USAGE_EXAMPLES.md)** - 详细的使用示例和最佳实践指南
 
 ## 🌟 核心特性
 
@@ -159,8 +160,58 @@ ALIBABA_CLOUD_REGION_ID=cn-hangzhou
 ### 智能实例查询
 
 ```python
-# 自动检测并查询任意云平台的实例
+# 方式1：自动检测并查询任意云平台的实例（传统方式）
 get_instance_info("1.2.3.4")  # 根据IP自动识别云平台
+
+# 方式2：明确指定云平台（推荐，更快速）
+get_instance_info("1.2.3.4", provider="aws")        # 直接指定AWS
+get_instance_info("104.248.1.100", provider="digitalocean")  # 直接指定DigitalOcean
+
+# 方式3：直接通过云平台查询（最高效）
+get_instance_by_provider("aws", "i-1234567890abcdef0")       # AWS实例ID
+get_instance_by_provider("digitalocean", "123456")           # DigitalOcean Droplet ID
+get_instance_by_provider("vultr", "uuid-string")             # Vultr实例ID
+get_instance_by_provider("alibaba", "i-bp1234567890")        # 阿里云实例ID
+```
+
+### 通用电源管理（新增）
+
+```python
+# 通用电源管理函数，支持所有云平台（AWS除外）
+manage_instance_power(
+    provider="digitalocean",
+    instance_id="123456",
+    action="reboot",
+    ip_confirmation="1.2.3.4",
+    name_confirmation="web-server",
+    operation_confirmation="重启"
+)
+
+# 支持的操作类型：
+# - power_on: 开机
+# - power_off: 强制关机
+# - reboot: 重启
+# - shutdown: 优雅关机（部分平台支持）
+
+# Vultr示例
+manage_instance_power(
+    provider="vultr",
+    instance_id="uuid-string",
+    action="power_on",
+    ip_confirmation="5.6.7.8",
+    name_confirmation="test-server",
+    operation_confirmation="开机"
+)
+
+# 阿里云示例
+manage_instance_power(
+    provider="alibaba",
+    instance_id="i-bp1234567890",
+    action="power_off",
+    ip_confirmation="47.96.1.100",
+    name_confirmation="prod-server",
+    operation_confirmation="关机"
+)
 ```
 
 ### AWS 专属功能（只读）
